@@ -1,6 +1,6 @@
 @ECHO off
 
-set /P installer=Enter name of package manager:
+set /P installer=Enter the name of your preferred package manager (in lower case):
 
 if "%installer%" == "conda" (
 conda install --file py_packages.txt
