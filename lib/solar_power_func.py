@@ -37,13 +37,20 @@ pvlib_abspath = os.path.dirname(os.path.abspath(inspect.getfile(pvlib)))
 # pvlib uses 0=North, 90=East, 180=South, 270=West convention
 
 
-def tmy_to_power(path_tmy_data, surface_tilt=30,
-                 surface_azimuth=180, albedo=0.2, silent=True):
+def tmy_to_power(path_tmy_data='.', tmy_data=np.NaN,
+                 locdata=np.NaN, header='',
+                 surface_tilt=30, surface_azimuth=180,
+                 albedo=0.2, silent=True):
 
-    # read tmy data with year values coerced to a single year
-    tmy_data, locdata, header, _ = wf.get_weather(
-        'tmy_data', path_tmy_data, ftype='epw')
-    tmy_data.index.name = 'Time'
+    if path_tmy_data != '.':
+        # read tmy data.
+        tmy_data, locdata, header, _ = wf.get_weather(
+            'tmy_data', path_tmy_data, ftype='epw')
+        tmy_data.index.name = 'Time'
+    else:
+        if np.all(np.isnan(tmy_data)):
+            print('You did not give me either a path to a TMY file or a dataframe.')
+            return 0
 
     # ## Calculate modeling intermediates
 

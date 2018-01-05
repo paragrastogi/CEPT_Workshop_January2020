@@ -340,8 +340,12 @@ def read_epw(fpath, epw_colnames=epw_colnames):
 
         infoline = (header[0].strip()).split(",")
 
-        locdata = dict(loc=infoline[1], lat=infoline[6], long=infoline[7],
-                       tz=infoline[8], alt=infoline[9], wmo=infoline[5])
+        locdata = dict(loc=infoline[1],  # String location name.
+                       lat=np.double(infoline[6]),
+                       long=np.double(infoline[7]),
+                       tz=np.double(infoline[8]),
+                       alt=np.double(infoline[9]),
+                       wmo=infoline[5])
 
         # Assign header information to table.
         #        wdata_typ = wdata_typ.assign(
@@ -524,6 +528,10 @@ def give_weather(ts, locdata, stcode, header,
 
     uy = np.asarray(np.unique(ts[:, 0, 0]), dtype=int)
 
+    if n_samples == 1 and uy.shape[0] != 1:
+        uy = [uy[0]]
+        ts[-1, 0, 0] = ts[0, 0, 0]
+
     for n in range(0, n_samples):
 
         for y, year in enumerate(uy):
@@ -697,6 +705,7 @@ def give_weather(ts, locdata, stcode, header,
     print("You asked for {0} files to be written out. ".format(n_samples) +
           "I was able to write out {0} files successfully.".format(
                   np.sum(success)))
+    print('Out file path is {0}'.format(filepath))
 #    return 1
 
 # ----------- End give_weather function. -----------
