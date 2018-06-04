@@ -44,8 +44,8 @@ def tmy_to_power(path_tmy_data='.', tmy_data=np.NaN,
 
     if path_tmy_data != '.':
         # read tmy data.
-        tmy_data, locdata, header, _ = wf.get_weather(
-            'tmy_data', path_tmy_data, ftype='epw')
+        tmy_data, locdata, header = wf.get_weather(
+            'tmy_data', path_tmy_data, file_type='epw')
         tmy_data.index.name = 'Time'
     else:
         if np.all(np.isnan(tmy_data)):
