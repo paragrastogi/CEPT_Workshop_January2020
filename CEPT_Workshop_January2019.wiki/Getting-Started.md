@@ -33,6 +33,10 @@ We will use the command prompt to install the modules/packages/libraries needed 
 <li> <kbd>conda install numpy</kbd>
 <li> <kbd>conda install scipy</kbd>
 <li> <kbd>conda install pandas</kbd>
+<li> <kbd>conda install sklearn</kbd>
+<li> <kbd>conda install matplotlib</kbd>
+<li> <kbd>conda install seaborn</kbd>
+<li> <kbd>conda install h5py</kbd>
 </ul>
 
 If all of these modules installed fine, you are all set to start with the notebooks for this workshop. You can check your installation by using the `conda install <module name>` command again. If the module is already installed, you will get a message saying `All requested packages already installed.`.
