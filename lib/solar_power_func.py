@@ -45,7 +45,7 @@ def tmy_to_power(path_tmy_data='.', tmy_data=np.NaN,
     if path_tmy_data != '.':
         # read tmy data.
         tmy_data, locdata, header = wf.get_weather(
-            'tmy_data', path_tmy_data, file_type='epw')
+            'tmy_data', path_tmy_data)
         tmy_data.index.name = 'Time'
     else:
         if np.all(np.isnan(tmy_data)):
@@ -100,14 +100,14 @@ def tmy_to_power(path_tmy_data='.', tmy_data=np.NaN,
     # the extraradiation function returns a simple numpy array
     # instead of a nice pandas series. We will change this
     # in a future version
-    dni_extra = pvlib.irradiance.extraradiation(tmy_data.index)
+    dni_extra = pvlib.irradiance.get_extra_radiation(tmy_data.index)
     dni_extra = pd.Series(dni_extra, index=tmy_data.index)
 
     # ### Airmass
     # Calculate airmass. Lots of model options here, see the
     # ``atmosphere`` module tutorial for more details.
 
-    airmass = pvlib.atmosphere.relativeairmass(
+    airmass = pvlib.atmosphere.get_relative_airmass(
         solpos['apparent_zenith'])
 
     # The funny appearance is due to aliasing and setting
@@ -139,7 +139,7 @@ def tmy_to_power(path_tmy_data='.', tmy_data=np.NaN,
     # You could have also provided a string to the
     # ``surface_type`` keyword argument.
 
-    poa_ground_diffuse = pvlib.irradiance.grounddiffuse(
+    poa_ground_diffuse = pvlib.irradiance.get_ground_diffuse(
         surface_tilt, tmy_data['ghi'], albedo=albedo)
 
     # ### AOI
@@ -155,7 +155,7 @@ def tmy_to_power(path_tmy_data='.', tmy_data=np.NaN,
     #
     # Calculate POA irradiance
 
-    poa_irrad = pvlib.irradiance.globalinplane(
+    poa_irrad = pvlib.irradiance.poa_components(
         aoi, tmy_data['dni'], poa_sky_diffuse,
         poa_ground_diffuse)
 
@@ -195,8 +195,12 @@ def tmy_to_power(path_tmy_data='.', tmy_data=np.NaN,
         pvlib.pvsystem.calcparams_desoto(
             poa_irrad.poa_global,
             temp_cell=pvtemps['temp_cell'],
-            alpha_isc=cec_module['alpha_sc'],
-            module_parameters=cec_module,
+            alpha_sc=cec_module['alpha_sc'],
+            a_ref=cec_module['a_ref'],
+			I_L_ref=cec_module['I_L_ref'], 
+			I_o_ref=cec_module['I_o_ref'],
+			R_sh_ref=cec_module['R_sh_ref'], 
+			R_s=cec_module['R_s'],
             EgRef=1.121, dEgdT=-0.0002677)
 
     single_diode_out = pvlib.pvsystem.singlediode(
