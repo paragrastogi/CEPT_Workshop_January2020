@@ -1,3 +1,5 @@
 SimAud_2018_Uncertainty.wiki/
 __pycache__
 .ipynb_checkpoints
+*_ccdata.p
+syn_*.p
