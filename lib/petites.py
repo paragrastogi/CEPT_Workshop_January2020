@@ -103,11 +103,20 @@ def euclidean(x, y):
 # ----------- END euclidean function. -----------
 
 
-def dd(xin, bp):
+def dd(xin, bp, freq='H'):
 
-    dd = (xin - bp)
-    cdd = dd[dd>0].resample('1Y').sum()
-    hdd = np.abs(dd[dd<0].resample('1Y').sum())
+    if isinstance(bp, list):
+        hdd = (bp[0] - xin).sum()
+        cdd = (xin - bp[1]).sum()        
+    else:
+        dd = xin - bp
+        hdd = np.abs(dd[dd<0].sum())
+        cdd = dd[dd>0].sum()
+        
+    # Adjust for frequency of incoming data.
+    if freq == 'H':
+        hdd = hdd/24
+        cdd = cdd/24
 
-    return hdd, cdd
+    return cdd, hdd
 
