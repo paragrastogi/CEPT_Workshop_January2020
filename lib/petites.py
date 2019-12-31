@@ -83,6 +83,14 @@ def epdf(x, bins=25):
     return hist, bin_edges
 
 
+def rel_hist(x, bins=25):
+    hist, bin_edges = np.histogram(x, bins=bins)
+
+    hist = hist/sum(hist)
+
+    return hist, bin_edges
+
+
 def remove_leap_day(df):
     '''Removes leap day using time index.'''
 
@@ -106,8 +114,10 @@ def euclidean(x, y):
 def dd(xin, bp, freq='H'):
 
     if isinstance(bp, list):
-        hdd = (bp[0] - xin).sum()
-        cdd = (xin - bp[1]).sum()        
+        hdd = (bp[1] - xin)
+        cdd = (xin - bp[0])
+        hdd=hdd[hdd>0].sum()
+        cdd=cdd[cdd>0].sum()
     else:
         dd = xin - bp
         hdd = np.abs(dd[dd<0].sum())
